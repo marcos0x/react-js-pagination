@@ -83,7 +83,6 @@ export default class Pagination extends React.Component {
     const pages = [];
     const {
       itemsCountPerPage,
-      pageRangeDisplayed,
       activePage,
       ellipsisText,
       prevPageText,
@@ -112,6 +111,14 @@ export default class Pagination extends React.Component {
       getPageUrl
     } = this.props;
 
+    let {
+      pageRangeDisplayed,
+    } = this.props;
+
+    if (!hideFirstLastPages && (activePage == paginationInfo.first_page || activePage == paginationInfo.last_page)) {
+      pageRangeDisplayed -= 1;
+    }
+
     const paginationInfo = new paginator(
       itemsCountPerPage,
       pageRangeDisplayed
@@ -137,7 +144,7 @@ export default class Pagination extends React.Component {
       );
     }
 
-    this.isFirstPageVisible(paginationInfo.has_previous_page) && activePage > 1 && 
+    this.isFirstPageVisible(paginationInfo.has_previous_page) && !hideFirstLastPages && activePage > 1 && 
       pages.unshift(
         <Page
           key={"ellipsisFirst"}
@@ -176,7 +183,7 @@ export default class Pagination extends React.Component {
         />
       );
 
-    this.isLastPageVisible(paginationInfo.has_next_page) && activePage < paginationInfo.last_page &&
+    this.isLastPageVisible(paginationInfo.has_next_page) && !hideFirstLastPages && activePage < paginationInfo.last_page &&
       pages.push(
         <Page
           key={"ellipsisLast"}

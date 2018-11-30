@@ -16,12 +16,15 @@ export default class Page extends Component {
         linkClass: PropTypes.string,
         disabledClass: PropTypes.string,
         ellipsisClass: PropTypes.string,
+        ellipsisTextClass: PropTypes.string,
         href: PropTypes.string
     };
 
     static defaultProps = {
         activeClass: "active",
         disabledClass: "disabled",
+        ellipsisClass: undefined,
+        ellipsisTextClass: undefined,
         itemClass: undefined,
         linkClass: undefined,
         activeLinkCLass: undefined,
@@ -50,6 +53,7 @@ export default class Page extends Component {
             activeLinkClass,
             disabledClass,
             ellipsisClass,
+            ellipsisTextClass,
             isActive,
             isDisabled,
             isEllipsis,
@@ -58,18 +62,19 @@ export default class Page extends Component {
 
         const css = cx(itemClass, {
             [activeClass]: isActive,
-            [disabledClass]: isDisabled,
+            [disabledClass]: isDisabled || isEllipsis,
             [ellipsisClass]: isEllipsis
         });
 
         const linkCss = cx(linkClass, {
-            [activeLinkClass]: isActive
+            [activeLinkClass]: isActive,
+            [ellipsisTextClass]: isEllipsis
         });
 
         return (
             <li className={css} onClick={::this.handleClick}>
                 {isEllipsis
-                    ? (<span>{pageText}</span>)
+                    ? (<span className={linkCss}>{pageText}</span>)
                     : (<a className={linkCss} href={href}>{pageText}</a>)
                 }
             </li>
