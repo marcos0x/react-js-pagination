@@ -21,6 +21,7 @@ export default class Pagination extends React.Component {
     hideNavigation: PropTypes.bool,
     innerClass: PropTypes.string,
     ellipsisClass: PropTypes.string,
+    ellipsisTextClass: PropTypes.string,
     itemClass: PropTypes.string,
     itemClassFirst: PropTypes.string,
     itemClassPrev: PropTypes.string,
@@ -47,7 +48,6 @@ export default class Pagination extends React.Component {
     nextPageText: "⟩",
     lastPageText: "",
     innerClass: "pagination",
-    ellipsisClass: 'pagination-ellipsis',
     itemClass: undefined,
     linkClass: undefined,
     activeLinkClass: undefined,
@@ -93,6 +93,7 @@ export default class Pagination extends React.Component {
       onChange,
       activeClass,
       ellipsisClass,
+      ellipsisTextClass,
       itemClass,
       itemClassFirst,
       itemClassPrev,
@@ -156,6 +157,7 @@ export default class Pagination extends React.Component {
           isEllipsis
           pageText={ellipsisText}
           itemClass={cx(itemClass)}
+          linkClass={cx(linkClass)}
           ellipsisClass={cx(ellipsisClass)}
         />
       );
@@ -195,6 +197,7 @@ export default class Pagination extends React.Component {
           isEllipsis
           pageText={ellipsisText}
           itemClass={cx(itemClass)}
+          linkClass={cx(linkClass)}
           ellipsisClass={cx(ellipsisClass)}
         />
       );

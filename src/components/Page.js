@@ -23,8 +23,8 @@ export default class Page extends Component {
     static defaultProps = {
         activeClass: "active",
         disabledClass: "disabled",
-        ellipsisClass: undefined,
-        ellipsisTextClass: undefined,
+        ellipsisClass: "ellipsis",
+        ellipsisTextClass: "ellipsis-text",
         itemClass: undefined,
         linkClass: undefined,
         activeLinkCLass: undefined,
