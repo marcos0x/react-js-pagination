@@ -115,14 +115,19 @@ export default class Pagination extends React.Component {
       pageRangeDisplayed,
     } = this.props;
 
-    if (!hideFirstLastPages && (activePage == paginationInfo.first_page || activePage == paginationInfo.last_page)) {
-      pageRangeDisplayed -= 1;
-    }
-
-    const paginationInfo = new paginator(
+    let paginationInfo = new paginator(
       itemsCountPerPage,
       pageRangeDisplayed
     ).build(totalItemsCount, activePage);
+
+    if (!hideFirstLastPages && (activePage == paginationInfo.first_page || activePage == paginationInfo.last_page)) {
+      pageRangeDisplayed -= 1;
+
+      paginationInfo = new paginator(
+        itemsCountPerPage,
+        pageRangeDisplayed
+      ).build(totalItemsCount, activePage);
+    }
 
     const firstPage = hideFirstLastPages ? paginationInfo.first_page : paginationInfo.first_page + 1;
     const lastPage = hideFirstLastPages ? paginationInfo.last_page : paginationInfo.last_page - 1;
