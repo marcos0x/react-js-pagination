@@ -11,6 +11,7 @@ export default class Pagination extends React.Component {
     activePage: PropTypes.number,
     itemsCountPerPage: PropTypes.number,
     pageRangeDisplayed: PropTypes.number,
+    ellipsisText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     prevPageText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     nextPageText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     lastPageText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -19,6 +20,7 @@ export default class Pagination extends React.Component {
     hideDisabled: PropTypes.bool,
     hideNavigation: PropTypes.bool,
     innerClass: PropTypes.string,
+    ellipsisClass: PropTypes.string,
     itemClass: PropTypes.string,
     itemClassFirst: PropTypes.string,
     itemClassPrev: PropTypes.string,
@@ -39,11 +41,13 @@ export default class Pagination extends React.Component {
     itemsCountPerPage: 10,
     pageRangeDisplayed: 5,
     activePage: 1,
+    ellipsisText: "...",
     prevPageText: "⟨",
-    firstPageText: "«",
+    firstPageText: "1",
     nextPageText: "⟩",
-    lastPageText: "»",
+    lastPageText: "",
     innerClass: "pagination",
+    ellipsisClass: 'pagination-ellipsis',
     itemClass: undefined,
     linkClass: undefined,
     activeLinkClass: undefined,
@@ -81,6 +85,7 @@ export default class Pagination extends React.Component {
       itemsCountPerPage,
       pageRangeDisplayed,
       activePage,
+      ellipsisText,
       prevPageText,
       nextPageText,
       firstPageText,
@@ -88,6 +93,7 @@ export default class Pagination extends React.Component {
       totalItemsCount,
       onChange,
       activeClass,
+      ellipsisClass,
       itemClass,
       itemClassFirst,
       itemClassPrev,
@@ -111,11 +117,10 @@ export default class Pagination extends React.Component {
       pageRangeDisplayed
     ).build(totalItemsCount, activePage);
 
-    for (
-      let i = paginationInfo.first_page;
-      i <= paginationInfo.last_page;
-      i++
-    ) {
+    const firstPage = hideFirstLastPages ? paginationInfo.first_page : paginationInfo.first_page + 1;
+    const lastPage = hideFirstLastPages ? paginationInfo.last_page : paginationInfo.last_page - 1;
+
+    for (let i = firstPage; i <= lastPage; i++) {
       pages.push(
         <Page
           isActive={i === activePage}
@@ -132,17 +137,14 @@ export default class Pagination extends React.Component {
       );
     }
 
-    this.isPrevPageVisible(paginationInfo.has_previous_page) && 
+    this.isFirstPageVisible(paginationInfo.has_previous_page) && activePage > 1 && 
       pages.unshift(
         <Page
-          key={"prev" + paginationInfo.previous_page}
-          pageNumber={paginationInfo.previous_page}
-          onClick={onChange}
-          pageText={prevPageText}
-          isDisabled={!paginationInfo.has_previous_page}
-          itemClass={cx(itemClass, itemClassPrev)}
-          linkClass={cx(linkClass, linkClassPrev)}
-          disabledClass={disabledClass}
+          key={"ellipsisFirst"}
+          isEllipsis
+          pageText={ellipsisText}
+          itemClass={cx(itemClass)}
+          ellipsisClass={cx(ellipsisClass)}
         />
       );
 
@@ -160,6 +162,47 @@ export default class Pagination extends React.Component {
         />
       );
 
+    this.isPrevPageVisible(paginationInfo.has_previous_page) && 
+      pages.unshift(
+        <Page
+          key={"prev" + paginationInfo.previous_page}
+          pageNumber={paginationInfo.previous_page}
+          onClick={onChange}
+          pageText={prevPageText}
+          isDisabled={!paginationInfo.has_previous_page}
+          itemClass={cx(itemClass, itemClassPrev)}
+          linkClass={cx(linkClass, linkClassPrev)}
+          disabledClass={disabledClass}
+        />
+      );
+
+    this.isLastPageVisible(paginationInfo.has_next_page) && activePage < paginationInfo.last_page &&
+      pages.push(
+        <Page
+          key={"ellipsisLast"}
+          isEllipsis
+          pageText={ellipsisText}
+          itemClass={cx(itemClass)}
+          ellipsisClass={cx(ellipsisClass)}
+        />
+      );
+
+    this.isLastPageVisible(paginationInfo.has_next_page) &&
+      pages.push(
+        <Page
+          key={"last"}
+          pageNumber={paginationInfo.total_pages}
+          onClick={onChange}
+          pageText={lastPageText ? lastPageText : paginationInfo.total_pages}
+          isDisabled={
+            paginationInfo.current_page === paginationInfo.total_pages
+          }
+          itemClass={cx(itemClass, itemClassLast)}
+          linkClass={cx(linkClass, linkClassLast)}
+          disabledClass={disabledClass}
+        />
+      );
+
     this.isNextPageVisible(paginationInfo.has_next_page) &&
       pages.push(
         <Page
@@ -170,22 +213,6 @@ export default class Pagination extends React.Component {
           isDisabled={!paginationInfo.has_next_page}
           itemClass={cx(itemClass, itemClassNext)}
           linkClass={cx(linkClass, linkClassNext)}
-          disabledClass={disabledClass}
-        />
-      );
-
-    this.isLastPageVisible(paginationInfo.has_next_page) &&
-      pages.push(
-        <Page
-          key={"last"}
-          pageNumber={paginationInfo.total_pages}
-          onClick={onChange}
-          pageText={lastPageText}
-          isDisabled={
-            paginationInfo.current_page === paginationInfo.total_pages
-          }
-          itemClass={cx(itemClass, itemClassLast)}
-          linkClass={cx(linkClass, linkClassLast)}
           disabledClass={disabledClass}
         />
       );

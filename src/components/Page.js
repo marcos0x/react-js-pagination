@@ -9,11 +9,13 @@ export default class Page extends Component {
         onClick: PropTypes.func.isRequired,
         isActive: PropTypes.bool.isRequired,
         isDisabled: PropTypes.bool,
+        isEllipsis: PropTypes.bool,
         activeClass: PropTypes.string,
         activeLinkClass: PropTypes.string,
         itemClass: PropTypes.string,
         linkClass: PropTypes.string,
         disabledClass: PropTypes.string,
+        ellipsisClass: PropTypes.string,
         href: PropTypes.string
     };
 
@@ -25,13 +27,14 @@ export default class Page extends Component {
         activeLinkCLass: undefined,
         isActive: false,
         isDisabled: false,
+        isEllipsis: false,
         href: "#"
     };
 
     handleClick(e) {
-        const { isDisabled, pageNumber } = this.props;
+        const { isDisabled, isEllipsis, pageNumber } = this.props;
         e.preventDefault();
-        if (isDisabled) {
+        if (isDisabled || isEllipsis) {
             return;
         }
         this.props.onClick(pageNumber);
@@ -46,14 +49,17 @@ export default class Page extends Component {
             linkClass,
             activeLinkClass,
             disabledClass,
+            ellipsisClass,
             isActive,
             isDisabled,
+            isEllipsis,
             href
         } = this.props;
 
         const css = cx(itemClass, {
             [activeClass]: isActive,
-            [disabledClass]: isDisabled
+            [disabledClass]: isDisabled,
+            [ellipsisClass]: isEllipsis
         });
 
         const linkCss = cx(linkClass, {
@@ -62,9 +68,10 @@ export default class Page extends Component {
 
         return (
             <li className={css} onClick={::this.handleClick}>
-                <a className={linkCss} href={href}>
-                    {pageText}
-                </a>
+                {isEllipsis
+                    ? (<span>{pageText}</span>)
+                    : (<a className={linkCss} href={href}>{pageText}</a>)
+                }
             </li>
         );
     }
