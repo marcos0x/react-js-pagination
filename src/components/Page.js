@@ -4,10 +4,10 @@ import cx from "classnames";
 
 export default class Page extends Component {
     static propTypes = {
-        pageText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        pageNumber: PropTypes.number.isRequired,
-        onClick: PropTypes.func.isRequired,
-        isActive: PropTypes.bool.isRequired,
+        pageText: PropTypes.any,
+        pageNumber: PropTypes.number,
+        onClick: PropTypes.func,
+        isActive: PropTypes.bool,
         isDisabled: PropTypes.bool,
         isEllipsis: PropTypes.bool,
         activeClass: PropTypes.string,
